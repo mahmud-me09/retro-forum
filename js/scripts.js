@@ -7,16 +7,23 @@ const markAsReadIcon = document.getElementsByClassName('mark-as-read-icon')
 let title
 let comment
 let count = 0
+let countForum = 0
 
-fetchForumCards(`https://openapi.programming-hero.com/api/retro-forum/posts`)
+showingSpinner()
+
+setTimeout(() =>{
+    fetchForumCards(`https://openapi.programming-hero.com/api/retro-forum/posts`)
+},2000)
+
+
 function fetchForumCards(url){
     title = []
     comment = []
+    countForum = 0
     forumCardContainer.innerHTML = ''
     fetch(url)
     .then(response => response.json())
     .then(data => {
-        console.log(data.posts)
         for(const card of data.posts){
             title.push(card.title)
             comment.push(card.comment_count)
@@ -59,20 +66,20 @@ function fetchForumCards(url){
                         </div>
                     </div>
                     <div class="mark-as-read-icon">
-                        <svg id="${card.id%100}" width="27.999817" height="28.000000" viewBox="0 0 27.9998 28" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <path id="${card.id%100}" d="M13.9997 0C6.26794 0 0 6.26819 0 13.9999C0 21.7314 6.26794 28 13.9997 28C21.7314 28 27.9998 21.7314 27.9998 13.9999C27.9998 6.26819 21.7314 0 13.9997 0ZM13.9999 4.91736L22.2846 10.0835L5.71533 10.0835L13.9999 4.91736ZM22.3878 18.333L22.387 18.333C22.387 19.1616 21.7154 19.833 20.8869 19.833L7.11301 19.833C6.28439 19.833 5.61295 19.1615 5.61295 18.333L5.61295 10.4122C5.61295 10.3246 5.62189 10.2394 5.63644 10.1556L13.5519 15.0914C13.5616 15.0974 13.572 15.1016 13.582 15.1072C13.5925 15.1129 13.6031 15.1185 13.6137 15.1239C13.6696 15.1527 13.7272 15.176 13.7861 15.1912C13.7922 15.1929 13.7982 15.1936 13.8043 15.1949C13.8689 15.2102 13.9343 15.2197 13.9997 15.2197L14.0002 15.2197C14.0006 15.2197 14.0011 15.2197 14.0011 15.2197C14.0664 15.2197 14.1318 15.2104 14.1964 15.1949C14.2025 15.1935 14.2086 15.1929 14.2146 15.1912C14.2734 15.176 14.3308 15.1527 14.387 15.1239C14.3976 15.1185 14.4083 15.1129 14.4187 15.1072C14.4286 15.1016 14.4391 15.0974 14.4488 15.0914L22.3643 10.1556C22.3788 10.2394 22.3878 10.3243 22.3878 10.4122L22.3878 18.333Z" fill="#10B981" fill-opacity="1.000000" fill-rule="nonzero"/>
+                        <svg id="${countForum}" width="27.999817" height="28.000000" viewBox="0 0 27.9998 28" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <path id="${countForum}" d="M13.9997 0C6.26794 0 0 6.26819 0 13.9999C0 21.7314 6.26794 28 13.9997 28C21.7314 28 27.9998 21.7314 27.9998 13.9999C27.9998 6.26819 21.7314 0 13.9997 0ZM13.9999 4.91736L22.2846 10.0835L5.71533 10.0835L13.9999 4.91736ZM22.3878 18.333L22.387 18.333C22.387 19.1616 21.7154 19.833 20.8869 19.833L7.11301 19.833C6.28439 19.833 5.61295 19.1615 5.61295 18.333L5.61295 10.4122C5.61295 10.3246 5.62189 10.2394 5.63644 10.1556L13.5519 15.0914C13.5616 15.0974 13.572 15.1016 13.582 15.1072C13.5925 15.1129 13.6031 15.1185 13.6137 15.1239C13.6696 15.1527 13.7272 15.176 13.7861 15.1912C13.7922 15.1929 13.7982 15.1936 13.8043 15.1949C13.8689 15.2102 13.9343 15.2197 13.9997 15.2197L14.0002 15.2197C14.0006 15.2197 14.0011 15.2197 14.0011 15.2197C14.0664 15.2197 14.1318 15.2104 14.1964 15.1949C14.2025 15.1935 14.2086 15.1929 14.2146 15.1912C14.2734 15.176 14.3308 15.1527 14.387 15.1239C14.3976 15.1185 14.4083 15.1129 14.4187 15.1072C14.4286 15.1016 14.4391 15.0974 14.4488 15.0914L22.3643 10.1556C22.3788 10.2394 22.3878 10.3243 22.3878 10.4122L22.3878 18.333Z" fill="#10B981" fill-opacity="1.000000" fill-rule="nonzero"/>
                         </svg>
                     </div>
                 </div>
             `
             forumCardContainer.appendChild(div)
+            countForum++
         }
+        console.log(title,comment)
         hiddingSpinner()
-        search.value = ''
-        console.log(title,comment)   
+        search.value = '' 
     })
     .catch(error =>{
-        console.log(error)
         showingSpinner()
     })
 }
@@ -102,9 +109,9 @@ forumCardContainer.addEventListener('click',clickHandler)
 
 function clickHandler(event){
         if(event.target.matches('svg') || event.target.matches('path') || event.target.matches('.mark-as-read-icon')){
-            titleFunction(title[event.target.id-1], comment[event.target.id-1])
+            titleFunction(title[event.target.id], comment[event.target.id])
             console.log(event.target.id)
-            readCount.innerText = count
+            readCount.innerText = count;
         }
     }
 
@@ -126,7 +133,6 @@ function postCards(url){
     fetch(url)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
         for(const card of data){
             let div = document.createElement('div')
             div.classList.add('w-[374px]', 'h-[482px]', 'border', 'rounded-xl')
@@ -147,7 +153,7 @@ function postCards(url){
                     <path id="Vector" d="M11.2929 16.7071C11.4804 16.8947 11.7348 17 12 17C12.2652 17 12.5196 16.8947 12.7071 16.7071C12.8946 16.5196 13 16.2652 13 16C13 15.7348 12.8946 15.4804 12.7071 15.2929C12.5196 15.1053 12.2652 15 12 15C11.7348 15 11.4804 15.1053 11.2929 15.2929C11.1054 15.4804 11 15.7348 11 16C11 16.2652 11.1054 16.5196 11.2929 16.7071Z" stroke="#12132D" stroke-opacity="0.600000" stroke-width="1.500000" stroke-linejoin="round"/>
                 </g>
                 </svg>
-                <p>${card?.author?.posted_date ? card.author.posted_date : "No post date"}</p>
+                <p>${card?.author?.posted_date ? card.author.posted_date : "No Publish Date"}</p>
             </div>
             <div class="px-5 py-2">
                 <h1 class="text-lg py-2 font-extrabold">${card.title}</h1>
