@@ -44,7 +44,7 @@ function fetchForumCards(url){
                     <h1 class="text-xl font-bold py-2 card-title">${card.title}</h1>
                     <p >${card.description}</p>
                 </div>
-                <div class="flex justify-between flex-col lg:flex-row">
+                <div class="flex justify-between flex-row">
                     <div class="flex gap-5">
                         <div class="flex gap-2 justify-center items-center">
                             <svg width="22.500000" height="21.333374" viewBox="0 0 22.5 21.3334" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
