@@ -1,9 +1,13 @@
-const forumCardContainer = document.getElementById('forum-card-container')
+let forumCardContainer = document.getElementById('forum-card-container')
 const spinner = document.getElementById('spinner')
 const search = document.getElementById('search')
+const searchSubmit = document.getElementById('search-submit')
+const titleSection = document.getElementById('title-section')
+const markAsReadIcon = document.getElementsByClassName('mark-as-read-icon')
 
-
+fetchForumCards(`https://openapi.programming-hero.com/api/retro-forum/posts`)
 function fetchForumCards(url){
+    forumCardContainer.innerHTML = ''
     fetch(url)
     .then(response => response.json())
     .then(data => {
@@ -22,7 +26,7 @@ function fetchForumCards(url){
                     <p>Author : ${card?.author?.name ? card.author.name : 'No Author'}</p>
                 </div>
                 <div class="my-2 py-3 border-b border-dashed border-gray-500">
-                    <h1 class="text-xl font-bold py-2">${card.title}</h1>
+                    <h1 class="text-xl font-bold py-2 card-title">${card.title}</h1>
                     <p >${card.description}</p>
                 </div>
                 <div class="flex justify-between flex-col lg:flex-row">
@@ -46,7 +50,7 @@ function fetchForumCards(url){
                             <p>${card.posted_time} min</p>
                         </div>
                     </div>
-                    <div id="mark-as-read-icon">
+                    <div class="mark-as-read-icon" onclick = "${clickedFunction()}">
                         <svg width="27.999817" height="28.000000" viewBox="0 0 27.9998 28" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <path id="Vector" d="M13.9997 0C6.26794 0 0 6.26819 0 13.9999C0 21.7314 6.26794 28 13.9997 28C21.7314 28 27.9998 21.7314 27.9998 13.9999C27.9998 6.26819 21.7314 0 13.9997 0ZM13.9999 4.91736L22.2846 10.0835L5.71533 10.0835L13.9999 4.91736ZM22.3878 18.333L22.387 18.333C22.387 19.1616 21.7154 19.833 20.8869 19.833L7.11301 19.833C6.28439 19.833 5.61295 19.1615 5.61295 18.333L5.61295 10.4122C5.61295 10.3246 5.62189 10.2394 5.63644 10.1556L13.5519 15.0914C13.5616 15.0974 13.572 15.1016 13.582 15.1072C13.5925 15.1129 13.6031 15.1185 13.6137 15.1239C13.6696 15.1527 13.7272 15.176 13.7861 15.1912C13.7922 15.1929 13.7982 15.1936 13.8043 15.1949C13.8689 15.2102 13.9343 15.2197 13.9997 15.2197L14.0002 15.2197C14.0006 15.2197 14.0011 15.2197 14.0011 15.2197C14.0664 15.2197 14.1318 15.2104 14.1964 15.1949C14.2025 15.1935 14.2086 15.1929 14.2146 15.1912C14.2734 15.176 14.3308 15.1527 14.387 15.1239C14.3976 15.1185 14.4083 15.1129 14.4187 15.1072C14.4286 15.1016 14.4391 15.0974 14.4488 15.0914L22.3643 10.1556C22.3788 10.2394 22.3878 10.3243 22.3878 10.4122L22.3878 18.333Z" fill="#10B981" fill-opacity="1.000000" fill-rule="nonzero"/>
                         </svg>
@@ -55,13 +59,42 @@ function fetchForumCards(url){
                 </div>
             `
             forumCardContainer.appendChild(div)
-        }    
+        }
+        hiddingSpinner()
+        search.value = ''   
     })
     .catch(error =>{
         console.log(error)
-        
+        showingSpinner()
     })
 }
+// search functionality on forum
+searchSubmit.addEventListener('click', ()=>{
+    showingSpinner()
+    setTimeout(fetchForumCards, 2000,`https://openapi.programming-hero.com/api/retro-forum/posts?category=${search.value.toLowerCase()}`)
+})
+
+function titleFunction(){
+    let div = document.createElement('div')
+    div.classList.add('flex', 'bg-white', 'mt-4', 'p-5', 'rounded-lg', 'gap-3', 'justify-between', 'items-center')
+    div.innerHTML = `
+        <p class="font-semibold flex-1">10 Kids Unaware of Their Halloween Costume</p>
+        <svg width="22.500000" height="15.500000" viewBox="0 0 22.5 15.5" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <path id="Vector" d="M9.6001 9.3999C10.0377 9.83752 10.6312 10.0834 11.25 10.0834C11.8688 10.0834 12.4623 9.83752 12.8999 9.3999C13.3375 8.96228 13.5833 8.3689 13.5833 7.75C13.5833 7.1311 13.3375 6.5376 12.8999 6.1001C12.4623 5.6626 11.8688 5.41675 11.25 5.41675C10.6312 5.41675 10.0377 5.6626 9.6001 6.1001C9.16248 6.5376 8.91669 7.1311 8.91669 7.75C8.91669 8.3689 9.16248 8.96228 9.6001 9.3999ZM11.25 14.75C7.04999 14.75 3.54999 12.4166 0.75 7.75C3.54999 3.08325 7.04999 0.75 11.25 0.75C15.45 0.75 18.95 3.08325 21.75 7.75C18.95 12.4166 15.45 14.75 11.25 14.75Z" stroke="#12132D" stroke-opacity="0.600000" stroke-width="1.500000" stroke-linejoin="round"/>
+        </svg>
+        <p>1,568</p>
+    `
+    titleSection.appendChild(div)
+}
+
+function clickedFunction(){
+    console.log('clicked')
+}
+
+// forumCardContainer.addEventListener('click',() =>{
+//     console.log(document.getElementsByClassName('card-title'))
+// })
+
 
 function showingSpinner(){
     spinner.classList.add('flex')
@@ -72,5 +105,3 @@ function hiddingSpinner(){
     spinner.classList.remove('flex')
     spinner.classList.add('hidden')
 }
-
-fetchForumCards(`https://openapi.programming-hero.com/api/retro-forum/posts`)
