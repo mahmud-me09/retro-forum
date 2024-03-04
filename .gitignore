@@ -3,3 +3,5 @@ Forum Landing Page UI Design.fig
 Landing Page Design.png
 tailwind.config.js
 .vscode
+*.json
+node_modules
